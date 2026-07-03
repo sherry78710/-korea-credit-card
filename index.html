@@ -265,6 +265,7 @@ const PAY = {
   twpay:{label:'台新Pay+ (Pay著刷)', color:'var(--c-twpay)'},
   quan: {label:'全支付',   color:'var(--c-quanpay)'},
   own:  {label:'直接刷卡', color:'var(--c-own)'},
+  jdirect: {label:'直接刷卡（富邦J卡）', color:'var(--c-own)'},
 };
 
 function rec(payKey, card, rate, note, cardKeys){
@@ -301,7 +302,19 @@ const GROUPS = {
   },
   H: {
     primary: [ rec('own','富邦好市多卡（Mastercard）','最高10%','需先登入啟用Mastercard海外消費回饋官網', ['costco']) ],
-    backup: [ rec('ez','','10.5%+20%','~8/31前，綁銀行帳戶') ]
+    backup: [ rec('ez','','最高30.5%','暑假中，綁妳的帳戶') ]
+  },
+  I: {
+    primary: [ rec('jdirect','富邦J卡','3~6%＋JCB 5%','登錄後6%，順便累積JCB暑期70萬韓元門檻', ['jcard']) ],
+    backup: [ rec('own','永豐大戶卡','4.5%','達大戶等級，月上限400元', ['dahu']) ]
+  },
+  J: {
+    primary: [ rec('jdirect','富邦J卡','3~6%＋JCB 5%','LINE Pay雖可付款但目前無回饋加碼，刷J卡更划算', ['jcard']) ],
+    backup: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','看檔期','出發前查LINE Pay遊韓專區有無獨立活動', ['daway','laidian']) ]
+  },
+  K: {
+    primary: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','最高15%','日常必買類，名額易額滿，先查遊韓專區', ['daway','laidian']) ],
+    backup: [ rec('jdirect','富邦J卡','3~6%＋JCB 5%','額滿或不能用就刷J卡', ['jcard']) ]
   }
 };
 
@@ -330,9 +343,39 @@ const STORES = [
   {name:'樂天免稅店（線上）', alias:'롯데면세점 온라인 lotte duty free online', cat:'線上免稅店', group:'G'},
   {name:'新羅免稅店星巴克', alias:'신라면세점 스타벅스 starbucks', cat:'免稅店', group:'H'},
   {name:'漢江遊覽船', alias:'한강 유람선 hangang cruise', cat:'景點', group:'H'},
+  {name:'Olive Young 올리브영', alias:'oliveyoung 藥妝 美妝', cat:'藥妝', group:'K'},
+  {name:'樂天超市 Lotte Mart', alias:'롯데마트 lottemart 超市', cat:'超市', group:'J'},
+  {name:'E-MART 易買得（大型超市）', alias:'이마트 emart 超市 量販', cat:'超市', group:'I'},
+  {name:'樂天百貨 Lotte Department', alias:'롯데백화점 lotte department', cat:'百貨', group:'J'},
+  {name:'新世界百貨 Shinsegae', alias:'신세계백화점 shinsegae department', cat:'百貨', group:'K'},
+  {name:'樂天Outlet／樂天Mall', alias:'롯데아울렛 lotte outlet mall 樂天購物中心', cat:'Outlet', group:'J'},
+  {name:'新世界名牌折扣購物中心', alias:'신세계 사이먼 premium outlet 新世界outlet', cat:'Outlet', group:'K'},
+  {name:'樂天世界（遊樂園）', alias:'롯데월드 lotte world 遊樂園', cat:'景點', group:'K'},
+  {name:'愛寶樂園 EVERLAND', alias:'에버랜드 everland 遊樂園', cat:'景點', group:'K'},
+  {name:'南怡島 Nami Island', alias:'남이섬 nami', cat:'景點', group:'K'},
+  {name:'雪花秀 Sulwhasoo', alias:'설화수 sulwhasoo 美妝', cat:'藥妝', group:'K'},
+  {name:'Amore Store 아모레', alias:'amore 美妝', cat:'藥妝', group:'K'},
+  {name:'OSULLOC 오설록', alias:'osulloc 茶', cat:'伴手禮', group:'K'},
+  {name:'LINE FRIENDS SQUARE', alias:'라인프렌즈 linefriends', cat:'選物', group:'K'},
+  {name:'K-POP SQUARE（弘大）', alias:'kpop square hongdae 周邊', cat:'選物', group:'K'},
+  {name:'Wiggle Wiggle 위글위글', alias:'wigglewiggle', cat:'選物', group:'K'},
+  {name:'SPAO 스파오', alias:'spao 服飾', cat:'服飾', group:'K'},
+  {name:'TOPTEN10 탑텐', alias:'topten 服飾', cat:'服飾', group:'K'},
+  {name:'WHO.A.U／MIXXO', alias:'후아유 믹쏘 服飾', cat:'服飾', group:'K'},
+  {name:'New Balance 뉴발란스', alias:'newbalance nb 鞋', cat:'服飾', group:'K'},
+  {name:'FOLDER／SHOOPEN（鞋店）', alias:'폴더 슈펜 folder shoopen', cat:'鞋類', group:'K'},
+  {name:'StoryWay（地鐵/KTX站內超商）', alias:'스토리웨이 storyway korail', cat:'超商', group:'K'},
+  {name:'一般星巴克門市', alias:'스타벅스 starbucks coffee', cat:'咖啡', group:'I'},
+  {name:'MEGA Coffee 메가커피', alias:'megacoffee mgc', cat:'咖啡', group:'B'},
+  {name:'A Twosome Place 투썸', alias:'twosome 咖啡蛋糕', cat:'咖啡', group:'A'},
+  {name:'明洞/廣藏等路邊攤（可刷卡攤位）', alias:'명동 노점 street food 小吃', cat:'餐飲', group:'I'},
+  {name:'一般餐廳/烤肉店/炸雞店', alias:'식당 restaurant 燒肉 치킨', cat:'餐飲', group:'I'},
+  {name:'計程車 Taxi', alias:'택시 taxi kakao', cat:'交通', group:'I'},
+  {name:'醫美診所/皮膚科', alias:'피부과 醫美 clinic', cat:'醫美', group:'I'},
+  {name:'飯店/住宿櫃檯付款', alias:'호텔 hotel 住宿', cat:'住宿', group:'I'},
 ];
 
-const CATS = ['全部','超商','咖啡','百貨','藥妝','免稅店','市場','服飾','餐飲'];
+const CATS = ['全部','超商','超市','咖啡','百貨','藥妝','免稅店','市場','服飾','餐飲','景點','選物','Outlet'];
 
 const CARDS = [
   {key:'jcard',   name:'富邦J卡',      free:true,  rate:'日韓泰 3%（登錄後6%，再疊JCB暑期+5%）', detail:'基本3%免登錄無上限；登錄加碼+3%（單筆需滿1,000元，每季上限1,000元＝可刷約33,333元，每月20日16:00開放登錄、名額6萬分3個月）。7/1起JCB暑期活動：韓國當地累積刷滿70萬韓元（約1.65萬台幣）再+5%（上限4.5萬韓元），免登錄自動回饋。JCB卡另享仁川機場貴賓室。', todo:'要登錄：每月20日16:00到富邦活動頁搶3%加碼名額。JCB暑期5%免登錄，但務必：①全程擇一用實體卡「或」Apple Pay刷（兩者分開累積）②結帳選韓元KRW結算，不要選台幣（DCC）。'},
@@ -395,7 +438,7 @@ const PAY_DETAIL = {
       '結帳時（韓國7-11例外）：要「主掃」——請店員在機台叫出QR Code，妳用LINE Pay掃它',
       '回饋領取：LINE POINTS依活動於消費後入帳，可在LINE POINTS內查'
     ],
-    stores: '吃喝補給＝超商、餐飲（CU、7-11、E-MART24、EDIYA等）；旅遊購物＝百貨、免稅店、Outlet、量販、服飾、美妝、景點（樂天超市、新世界百貨、樂天免稅店等）。',
+    stores: '日常必買＝超商、服飾、美妝、餐飲、景點、選物：7-11、CU、Olive Young（5/18起開放）、SPAO、TOPTEN10、WHO.A.U、MIXXO、New Balance、FOLDER、SHOOPEN、INNISFREE、雪花秀、Amore Store、OSULLOC、LINE FRIENDS、K-POP SQUARE、Wiggle Wiggle、樂天世界、愛寶樂園、南怡島、StoryWay站內超商等。百貨量販＝樂天超市、樂天百貨、新世界百貨、樂天Outlet、樂天/新羅免稅店等（⚠️目前百貨量販類多無回饋加碼，可付款但拿不到點數，請以遊韓專區當下公告為準）。',
     note: '各店家常有獨立活動（如7-11、CU、樂天世界），名額有限易額滿；出發前務必到LINE Pay「遊韓專區」看當下還有哪些、期限與名額。'
   },
   twpay: {
@@ -446,6 +489,24 @@ const PAY_DETAIL = {
     ],
     stores: '韓國星巴克新羅免稅店、漢江遊覽船等指定通路（清單以富邦官網為準）。',
     note: '這是信用卡本身活動，非電子支付，直接刷卡。記得「每季重新啟用」是最容易忘、也最容易白白少拿的一步。'
+  },
+  jdirect: {
+    period: 'J卡加碼與JCB暑期活動 2026暑期進行中',
+    myMax: '妳能拿：3~6%，大額集中刷可疊到約11%',
+    breakdown: [
+      '富邦J卡基本3%（日韓泰當地實體消費，免登錄無上限）',
+      '登錄加碼+3%＝6%（單筆滿1,000元才算，每季上限1,000元＝可刷約33,333元）',
+      'JCB暑期活動：韓國當地累積刷滿70萬韓元（約1.65萬台幣）再+5%（上限4.5萬韓元），免登錄',
+      '海外交易手續費1.5%要自付，但6%+5%扣掉後仍遠勝其他選項'
+    ],
+    steps: [
+      '出國前：每月20日16:00到富邦活動頁登錄「日韓泰3%加碼」（名額6萬分3個月，設鬧鐘搶）',
+      '結帳時：全程擇一用「實體卡」或「Apple Pay」刷（JCB活動兩者分開累積，混用會兩邊都不到70萬門檻）',
+      '結帳時：店員問幣別一律回答「韓元KRW」，選台幣（DCC）那筆就不算JCB活動',
+      '回饋領取：J卡回饋依富邦帳單週期；JCB 5%由富邦事後回饋，較慢（參考往年約活動結束後2個月起）'
+    ],
+    stores: '所有能刷卡的地方：百貨（樂天/新世界）、大型超市（E-MART/樂天超市）、一般餐廳、烤肉店、路邊可刷卡攤位、計程車、醫美、飯店、一般星巴克門市等。韓國刷卡極普及，找不到支付就刷這張。',
+    note: '策略：小額給悠遊付/icash Pay（免手續費高回饋），大額（百貨、超市採購、醫美、飯店）全部集中刷J卡衝70萬韓元門檻。'
   }
 };
 
