@@ -158,6 +158,15 @@
     border:1px solid #EAD3A0; padding:2px 7px; border-radius:7px;
     margin-left:8px; font-weight:700;
   }
+  .badge-todo{
+    font-size:10.5px; background:#FDEDEC; color:#C0392B;
+    border:1px solid #F2C4BF; padding:2px 7px; border-radius:7px;
+    margin-left:8px; font-weight:700;
+  }
+  .card-todo{
+    margin-top:8px; font-size:12.5px; line-height:1.6; color:#9A3B36;
+    background:#FDEDEC; border-radius:9px; padding:8px 10px;
+  }
   .rate-highlight{ color:var(--ink); font-weight:700; }
 
   footer{ text-align:center; color:var(--muted); font-size:11px; margin:30px 0 10px; padding:0 20px; line-height:1.6; }
@@ -194,6 +203,9 @@
   }
   .sheet-section ul{ margin:0; padding-left:18px; }
   .sheet-section li{ font-size:13.5px; line-height:1.7; margin-bottom:4px; }
+  .sheet-steps{ margin:0; padding-left:20px; }
+  .sheet-steps li{ font-size:13.5px; line-height:1.7; margin-bottom:8px; padding-left:2px; }
+  .sheet-steps li::marker{ color:var(--gold); font-weight:800; }
   .sheet-section p{ font-size:13.5px; line-height:1.7; margin:0; color:var(--ink); }
   .sheet-note{
     font-size:12px; color:var(--muted); background:var(--surface2);
@@ -228,7 +240,7 @@
   <div class="chips" id="chips"></div>
 </header>
 
-<div class="lazy-bar">🃏 找不到店家？無腦刷 <b>富邦J卡 3%無上限</b>，免登錄</div>
+<div class="lazy-bar">🃏 找不到店家？無腦刷 <b>富邦J卡 3%起</b>，登錄後6%，暑期刷滿70萬韓元再+5%</div>
 
 <main>
   <div id="results"></div>
@@ -236,7 +248,7 @@
   <p class="section-label">我的 8 張卡・海外/韓國回饋總表</p>
   <div id="cardRef"></div>
 
-  <p class="info-note">ⓘ 悠遊付／icash Pay／台灣Pay 是綁「銀行帳戶」的電子支付，回饋跟妳手上的信用卡沒有直接關係；LINE Pay／台新Pay+／全支付才是綁信用卡吃加碼。點任一支付方式可看完整攻略。額度或名額額滿時，改用「備用」選項。</p>
+  <p class="info-note">ⓘ 悠遊付／icash Pay 綁妳的銀行帳戶就能用；全支付綁國泰或將來帳戶多吃5%；台新Pay+綁Richart卡；LINE Pay綁DAWAY或賴點卡。點任一支付方式可看「妳實際能拿多少＋怎麼參加、怎麼領」。名額額滿時改用備用選項。台灣Pay已無回饋、且妳的帳戶不支援，已移除。</p>
 
   <footer>資料整理自 2026 韓國購物回饋文章＋各銀行/支付官網公告，實際回饋、名額與活動期限請以當下公告為準。</footer>
 </main>
@@ -249,7 +261,6 @@
 const PAY = {
   ez:   {label:'悠遊付',   color:'var(--c-twqr-blue)'},
   ics:  {label:'icash Pay',color:'var(--c-twqr-orange)'},
-  tw:   {label:'台灣Pay',  color:'var(--c-twqr-red)'},
   line: {label:'LINE Pay', color:'var(--c-line)'},
   twpay:{label:'台新Pay+ (Pay著刷)', color:'var(--c-twpay)'},
   quan: {label:'全支付',   color:'var(--c-quanpay)'},
@@ -263,31 +274,30 @@ function rec(payKey, card, rate, note, cardKeys){
 const GROUPS = {
   A: {
     primary: [
-      rec('ez',  '', '10.5%+20%', '~8/31前，綁銀行帳戶'),
-      rec('ics', '', '15%+20%',   '綁銀行帳戶'),
-      rec('tw',  '', '20%',       '綁銀行帳戶，三選一，額滿前優先')
+      rec('ez',  '', '最高30.5%', '暑假中，綁妳的帳戶'),
+      rec('ics', '', '15%',   '綁妳的帳戶，月上限300點')
     ],
-    backup: [ rec('twpay','台新Richart卡','3.8%','免1.5%海外手續費', ['richart']) ]
+    backup: [ rec('twpay','台新Richart卡','5.3%','免1.5%海外手續費', ['richart']) ]
   },
   B: {
-    primary: [ rec('quan','國泰CUBE卡','3.5%','綁國泰世華/將來銀行帳戶可到8.5%', ['cube']) ],
-    backup: [ rec('twpay','台新Richart卡','3.8%','免1.5%海外手續費', ['richart']) ]
+    primary: [ rec('quan','綁國泰帳戶（或國泰CUBE卡）','8.5%','基本3.5%+綁國泰/將來帳戶5%', ['cube']) ],
+    backup: [ rec('twpay','台新Richart卡','5.3%','免1.5%海外手續費', ['richart']) ]
   },
   C: {
-    primary: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','+10%','含原卡回饋，~9/30', ['daway','laidian']) ]
+    primary: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','最高15%','吃喝補給5%+綁卡10%（有1.5%手續費）', ['daway','laidian']) ]
   },
   D: {
-    primary: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','+5%','含原卡回饋', ['daway','laidian']) ]
+    primary: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','約5%','旅遊購物（有1.5%手續費）', ['daway','laidian']) ]
   },
   E: {
-    primary: [ rec('twpay','台新Richart卡','3.8%','免1.5%海外手續費', ['richart']) ],
-    backup: [ rec('quan','國泰CUBE卡','3.5%','', ['cube']) ]
+    primary: [ rec('twpay','台新Richart卡','5.3%','免1.5%海外手續費', ['richart']) ],
+    backup: [ rec('quan','綁國泰帳戶（或國泰CUBE卡）','8.5%','', ['cube']) ]
   },
   F: {
-    primary: [ rec('quan','國泰CUBE卡','最高20%','限量活動，額滿改3.5%基本', ['cube']) ]
+    primary: [ rec('quan','綁國泰帳戶（或國泰CUBE卡）','8.5%','基本3.5%+綁國泰/將來帳戶5%', ['cube']) ]
   },
   G: {
-    primary: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','最高30%','~7/31限定活動', ['daway','laidian']) ]
+    primary: [ rec('line','永豐DAWAY卡 或 聯邦賴點卡','最高30%','~7/31限定，快到期', ['daway','laidian']) ]
   },
   H: {
     primary: [ rec('own','富邦好市多卡（Mastercard）','最高10%','需先登入啟用Mastercard海外消費回饋官網', ['costco']) ],
@@ -325,112 +335,117 @@ const STORES = [
 const CATS = ['全部','超商','咖啡','百貨','藥妝','免稅店','市場','服飾','餐飲'];
 
 const CARDS = [
-  {key:'jcard',   name:'富邦J卡',      free:true,  rate:'日韓泰 3%無上限', detail:'基本3%不用登錄；加碼登錄再+3%可到6%（季上限1,000元/戶）。'},
-  {key:'dahu',    name:'永豐大戶卡',    free:true,  rate:'國外基本2%，大戶等級4.5%，大戶Plus 6%', detail:'不用逐筆登錄，但加碼要達成資產/自動扣繳任務；Plus等級月上限1,000元。'},
-  {key:'cube',    name:'國泰CUBE卡',   free:true,  rate:'切「趣旅行」方案 3~3.3%無上限', detail:'每天要記得切換方案，忘記切換就只有0.3%。'},
-  {key:'daway',   name:'永豐DAWAY卡',  free:true,  rate:'國外基本 2.5%', detail:'本身回饋普通，優勢在綁LINE Pay吃加碼（見上方店家推薦）。'},
-  {key:'richart', name:'台新Richart卡',free:false, rate:'切「玩旅刷」方案 3.3%', detail:'需另扣1.5%海外手續費；改切「台新Pay+ Pay著刷」3.8%且免手續費更划算。'},
-  {key:'costco',  name:'富邦好市多卡',  free:false, rate:'店外基本1%無上限', detail:'精選海外旅遊登錄最高5%（月上限600元）；韓國星巴克/新羅免稅店/漢江遊覽船登入Mastercard活動最高10%。'},
-  {key:'jiho',    name:'聯邦吉鶴卡',    free:false, rate:'一般海外1%', detail:'韓國實體消費滿70萬韓元登錄享10%（每戶上限70,000韓元）；主力其實在日本。'},
-  {key:'laidian', name:'聯邦賴點卡',    free:false, rate:'一般海外約1%', detail:'本身回饋普通，優勢在綁LINE Pay吃加碼（見上方店家推薦）。'},
+  {key:'jcard',   name:'富邦J卡',      free:true,  rate:'日韓泰 3%（登錄後6%，再疊JCB暑期+5%）', detail:'基本3%免登錄無上限；登錄加碼+3%（單筆需滿1,000元，每季上限1,000元＝可刷約33,333元，每月20日16:00開放登錄、名額6萬分3個月）。7/1起JCB暑期活動：韓國當地累積刷滿70萬韓元（約1.65萬台幣）再+5%（上限4.5萬韓元），免登錄自動回饋。JCB卡另享仁川機場貴賓室。', todo:'要登錄：每月20日16:00到富邦活動頁搶3%加碼名額。JCB暑期5%免登錄，但務必：①全程擇一用實體卡「或」Apple Pay刷（兩者分開累積）②結帳選韓元KRW結算，不要選台幣（DCC）。'},
+  {key:'dahu',    name:'永豐大戶卡',    free:true,  rate:'國外 4.5%（達大戶等級）', detail:'國外2%無上限+達大戶等級加碼共4.5%（每月上限400元）。網購也適用，免逐筆登錄。'},
+  {key:'cube',    name:'國泰CUBE卡',   free:true,  rate:'切「趣旅行」 3~3.3%無上限', detail:'每天要記得切到「趣旅行」，忘記切只有0.3%。也是全支付這季唯一支援的信用卡。', todo:'要切換：每天用前在CUBE App把權益切到「趣旅行」。'},
+  {key:'daway',   name:'永豐DAWAY卡',  free:true,  rate:'綁LINE Pay吃加碼', detail:'本身國外約2.5%；優勢在綁LINE Pay吃「吃喝補給+10%」（見上方店家推薦）。'},
+  {key:'richart', name:'台新Richart卡',free:false, rate:'走台新Pay+ 5.3%', detail:'直接刷切「玩旅刷」只有3.3%還要扣1.5%手續費；改用台新Pay+切「Pay著刷」3.8%免手續費＝5.3%更划算（見上方台新Pay+）。'},
+  {key:'costco',  name:'富邦好市多卡',  free:false, rate:'指定通路最高10%', detail:'韓國星巴克新羅免稅店/漢江遊覽船等指定通路最高10%。', todo:'要啟用：出發前到富邦Mastercard海外消費回饋官網登入啟用，每季要重做一次。'},
+  {key:'jiho',    name:'聯邦吉鶴卡',    free:false, rate:'JCB暑期活動 5%（滿70萬韓元）', detail:'聯邦自家的韓國10%活動已於6/30結束。目前剩7/1起的JCB組織暑期活動：韓國當地累積刷滿70萬韓元再+5%（上限4.5萬韓元）+本身海外1%＝約6%。但同樣是JCB卡，富邦J卡基本就有3%，疊JCB後更高，建議大額集中刷J卡就好，這張備用。'},
+  {key:'laidian', name:'聯邦賴點卡',    free:false, rate:'綁LINE Pay吃加碼', detail:'本身海外約1%；優勢在綁LINE Pay吃「吃喝補給+10%」（見上方店家推薦）。'},
 ];
 
 // ---- 各支付完整攻略 ----
 const PAY_DETAIL = {
   ez: {
-    period: '活動期間 2026/6/1~8/31',
+    period: '活動期間 ~2026/8/31（暑假加碼中）',
+    myMax: '妳能拿：最高 30.5%',
     breakdown: [
-      '筆筆回饋 10.5%（每月每戶上限600元回饋金，可刷約NT$5,710）',
-      '綁定元大銀行再加碼15%（上限100元）',
-      '暑假加碼（7/1~8/31）：TWQR筆筆再+20%（月上限2,000元，總上限50萬元，可刷約NT$10,000）',
-      '可疊加：週五會員日+2%、新會員+3~5%、月級挑戰最高+3%',
-      '不限金額任一筆消費，贈「韓國樂天免稅店100元現金回饋券」1張（每月限1張）',
-      '免收1.5%海外交易手續費'
+      '基本筆筆 10.5%（每月上限600元，消費約NT$5,710拿滿）',
+      '暑假加碼 +20%（7、8月，每月上限2,000元，消費約NT$10,000拿滿）',
+      '可再疊加：週五會員日+2%、月級挑戰最高+3%（一般會員也能累積）',
+      '送樂天免稅店100元現金回饋券（每月1張，憑券到樂天免稅店單筆滿100元回饋100元）',
+      '免1.5%海外手續費'
     ],
-    how: '開啟「悠遊付」App → 點選「付款碼」→ 切換地區到「韓國」→ 出示QR Code給店家掃描（反掃）。',
+    steps: [
+      '出國前：把「悠遊付 Easy Wallet」App更新到最新版，錢包儲值或綁好妳任一家銀行帳戶（富邦/國泰/永豐…都行）',
+      '結帳時：開App→點「付款碼」→右上角把地區切到「韓國」→出示條碼給店員掃',
+      '回饋領取：交易完成後回饋金「立即」入帳到悠遊付錢包，可在App「我的→交易紀錄→收入」查看，之後可提領回銀行'
+    ],
     stores: '韓國四大超商（CU、7-11、GS25、E-MART24）、咖啡（A Twosome Place、Ediya、Compose）、大創、新世界／現代／樂天免稅店、paris baguette、31冰淇淋等。認明《Paybooc／페이북／BC》標誌。',
-    code: '註冊推薦碼 U5JY0TN，可拿50元（~9/30）',
-    note: '限用「悠遊付錢包」或「綁定銀行帳戶」扣款支付，不可綁信用卡。',
-    myFit: { status:'good', text:'妳的富邦、將來銀行、國泰、台新、聯邦、永豐帳戶都可以綁，任選一家即可拿基本回饋。但「綁元大銀行+15%」這項妳沒有元大帳戶，吃不到。' }
+    note: '限用悠遊付錢包或綁定銀行帳戶扣款，不可綁信用卡。每月1號重新計算上限，額滿會提前結束，建議一到韓國就先刷。'
   },
   ics: {
-    period: '活動期間 2026/4/1~8/31',
+    period: '活動期間 ~2026/8/31',
+    myMax: '妳能拿：15%',
     breakdown: [
-      '筆筆回饋 15%（每月每戶上限300點，可刷約NT$2,000）',
-      '新戶當月加碼10%（註冊當月於韓國TWQR店家消費，不限金額，上限300點）',
-      '暑假加碼（7/1~8/31）：TWQR筆筆再+20%（月上限2,000元，總上限100萬點，可刷約NT$10,000）',
-      '可疊加：週日全通路單筆滿200元+7%（月上限200點，~12/31）',
-      '免收1.5%海外交易手續費'
+      '基本筆筆 15% OPENPOINT（每月上限300點，消費約NT$2,000拿滿）',
+      '免1.5%海外手續費，回饋點數1點=1元可折抵下一筆'
     ],
-    how: '開啟「icash Pay」App（注意：需用獨立App，從OPENPOINT App內開啟不適用本活動）→ 會自動切換地區到「韓國」→ 出示QR Code給店家掃描。',
+    steps: [
+      '出國前：下載「icash Pay」獨立App（注意：不能從OPENPOINT App裡開，否則不算活動），綁好妳任一家銀行帳戶',
+      '結帳時：開icash Pay App→會自動切到「韓國」（沒切請手動切）→出示條碼給店員掃',
+      '回饋領取：點數當下立即發放到綁定的OPENPOINT帳戶，可即時查詢'
+    ],
     stores: '韓國四大超商、咖啡（A Twosome Place、Ediya、Compose）、大創、新世界／現代／樂天免稅店、paris baguette、31冰淇淋等。認明《Paybooc／페이북／BC》標誌。',
-    code: '註冊推薦碼 UB13X4M3，可拿50點（~8/31）',
-    note: '限用「icash Pay帳戶」或「綁定銀行帳戶」付款，不可綁信用卡。',
-    myFit: { status:'good', text:'妳的富邦、將來銀行、國泰、台新、聯邦、永豐帳戶都可以綁，任選一家即可拿基本回饋，沒有額外限制。' }
-  },
-  tw: {
-    period: '活動期間 2026/7/1~8/31',
-    breakdown: [
-      '台灣Pay筆筆現金回饋20%（每月每戶上限2,000元，總上限100萬元，可刷約NT$10,000）',
-      '電支機構（悠遊付、icash Pay）筆筆同享回饋20%',
-      '參加台灣Pay活動可再享1.5%紅利點數（限台灣銀行、土地銀行、合作金庫、第一銀行、華南銀行、彰化銀行、兆豐銀行、台灣企銀）'
-    ],
-    how: '開啟「台灣行動支付APP」或行動銀行APP → 點選「跨國交易」→ 選擇消費國家「韓國」→ 出示QR Code給店家掃描。',
-    stores: '韓國四大超商、咖啡（A Twosome Place、Ediya、Compose）、大創、遊樂園（愛寶樂園、首爾樂園）、Wiggle Wiggle、HBAF堅果、AK Plaza、Galleria百貨、新世界／現代／樂天免稅店、paris baguette、31冰淇淋等。認明《Paybooc／페이북／BC》標誌。',
-    note: '需綁定支援韓國跨國服務的銀行：台灣銀行、土地銀行、合作金庫、第一銀行、華南銀行、彰化銀行、兆豐銀行、台灣企銀、新光銀行、元大銀行、高雄銀行、上海銀行等15家。免手續費，不可綁信用卡。',
-    myFit: { status:'warn', text:'妳的富邦、將來銀行、國泰、台新、聯邦、永豐帳戶都不在支援名單內，這個支付妳目前用不了。除非另開一個名單內的銀行帳戶（例如合作金庫、第一銀行、兆豐銀行申辦門檻較低）。' }
+    note: '限用icash Pay帳戶或綁定銀行帳戶付款，不可綁信用卡。每月300點上限很快刷滿（約2,000元），額度用完就換悠遊付或其他支付。'
   },
   line: {
-    period: '活動期間 2026/7/1~9/30（分「吃喝補給」／「旅遊購物」兩大類）',
+    period: '分「吃喝補給」／「旅遊購物」兩類，各活動期限不同，以App遊韓專區為準',
+    myMax: '妳能拿：吃喝最高15%、旅遊購物約5%',
     breakdown: [
-      '基本回饋：吃喝補給 5%（月上限100點）；旅遊購物無基本回饋',
-      '綁任一VISA卡：吃喝補給 +10%（月上限200點）；旅遊購物 +3%（月上限150點）',
-      '綁中信LINE Pay VISA/JCB卡、聯邦賴點卡、永豐DAWAY卡：吃喝補給 +10%（含原卡回饋）',
-      '綁聯邦賴點卡、永豐DAWAY卡：旅遊購物 +5%（含原卡回饋）',
-      '獨立活動「樂天線上免稅店」最高30%（~7/31）：綁任一卡10%、綁VISA卡+10%、綁中信LINE Pay卡/聯邦賴點卡/永豐DAWAY卡再+10%',
-      '獨立活動「Olive Young」：不限金額每月抽888點（~12/31）'
+      '吃喝補給：基本5% + 綁永豐DAWAY卡或聯邦賴點卡再+10% ≒ 最高15%',
+      '旅遊購物：綁永豐DAWAY卡或聯邦賴點卡約+5%',
+      '樂天線上免稅店獨立活動最高30%（綁賴點/DAWAY卡，~7/31快到期）',
+      '⚠️ 綁信用卡付款有1.5%海外手續費，實拿要再扣，非免手續費支付'
     ],
-    how: '大部分為「反掃」：出示LINE Pay條碼給店家掃描即可。韓國7-11例外，須用「主掃」：請店員在POS機操作顯示QR Code，再用LINE Pay掃描該畫面。',
-    stores: '吃喝補給＝超商、餐飲（CU、7-11、E-MART24、EDIYA、OSULLOC等）；旅遊購物＝百貨、免稅店、Outlet、量販／商場、服飾、美妝、景點、選物、住宿（樂天超市、新世界百貨、樂天免稅店、SPAO、愛寶樂園等）。',
-    note: '綁信用卡消費會產生海外交易手續費，非免手續費支付。每卡每帳號、各銀行回饋皆有各自上限。'
+    steps: [
+      '出國前：LINE／LINE Pay App更新到最新版，在LINE Pay把付款方式綁「永豐DAWAY卡」或「聯邦賴點卡」；到「遊韓專區」把要用的優惠券先領起來',
+      '結帳時（一般店）：出示LINE Pay付款條碼給店員掃（反掃）',
+      '結帳時（韓國7-11例外）：要「主掃」——請店員在機台叫出QR Code，妳用LINE Pay掃它',
+      '回饋領取：LINE POINTS依活動於消費後入帳，可在LINE POINTS內查'
+    ],
+    stores: '吃喝補給＝超商、餐飲（CU、7-11、E-MART24、EDIYA等）；旅遊購物＝百貨、免稅店、Outlet、量販、服飾、美妝、景點（樂天超市、新世界百貨、樂天免稅店等）。',
+    note: '各店家常有獨立活動（如7-11、CU、樂天世界），名額有限易額滿；出發前務必到LINE Pay「遊韓專區」看當下還有哪些、期限與名額。'
   },
   twpay: {
-    period: '活動期間 2026/7/1~2027/3/31',
+    period: '活動期間 ~2027/3/31（已延長）',
+    myMax: '妳能拿：實質 5.3%（無上限）',
     breakdown: [
-      '切換「Pay著刷」現金回饋3.8%，回饋無上限',
-      '免收1.5%海外交易手續費',
-      '小額用「台新Pay+」綁Richart卡3.8%；大額改刷「Richart信用卡」切「玩旅刷」3.3%（但需扣1.5%手續費）'
+      '台新Richart卡切「Pay著刷」3.8%台新Point，回饋無上限',
+      '免1.5%海外手續費 → 3.8%+1.5% = 實質5.3%',
+      '額度：單筆5萬、單月30萬，適合大額戰利品'
     ],
-    how: '開啟「Richart Life」App → 點選「海外支付」進入台新Pay+ → 選擇支付地區「韓國」→ 選擇支付方式（台新銀行帳戶或台新信用卡）→ 可跟店員說「Hana Pay(하나Pay)／toss／Naver Pay」→ 出示QR Code結帳。',
-    stores: '韓國四大超商、大創、倫敦貝果博物館、UNIQLO、MUSINSA、innisfree、Tous les Jours、dal.komm、MAMMOTH COFFEE、Pascucci咖啡、農協超市等（支援Hana Pay/toss/Naver Pay的店家）。',
-    code: '新戶首次登錄Richart App，拿NT.300好友禮',
-    note: '注意「台新Pay」和「台新Pay+」不同，Pay+是海外專用，需先在Richart Life App開通「海外支付」功能。'
+    steps: [
+      '出國前：開「Richart Life」App→最下方「台新Pay付款」→切到「海外支付」→登入/註冊開通「台新Pay+」（要完成手機驗證成為電支會員）→綁定台新Richart卡並設為預設',
+      '⚠️ 當天記得把權益切到「Pay著刷」（不是玩旅刷），才有3.8%',
+      '結帳時：認明店家「Hana Pay（하나Pay）」標誌→開台新Pay+付款碼→切國家韓國→出示給店員掃',
+      '回饋領取：台新Point於入帳日後次二個營業日回饋至信用卡點數帳戶，帳單可查'
+    ],
+    stores: '韓國四大超商、大創、倫敦貝果博物館、UNIQLO、MUSINSA、innisfree、Tous les Jours、dal.komm、MAMMOTH COFFEE、Pascucci咖啡、農協超市等（支援Hana Pay的店家）。',
+    note: '「台新Pay」和「台新Pay+」不同，Pay+才是海外專用，一定要先在Richart Life App開通「海外支付」。'
   },
   quan: {
-    period: '活動期間 2026/4/1~6/30（後續季度以官網公告為準）',
+    period: '活動期間 2026/7/1~9/30（第三季）',
+    myMax: '妳能拿：最高 13.5%',
     breakdown: [
-      '筆筆回饋3.5%（不限次數，單筆上限350點）',
-      '單筆滿NT$1萬加碼5%（單筆上限850點）',
-      '以上兩項合併每人每月上限1,000全點，可刷約NT$28,570',
-      '綁定國泰世華銀行／將來銀行：筆筆再加碼5%（單筆上限100點，每人每週上限100點）',
-      '韓國現代百貨最高20%回饋（詳見官網活動）',
-      '免收1.5%海外交易手續費'
+      '基本筆筆 3.5%（單筆上限350點）',
+      '綁國泰世華或將來銀行帳戶再+5%（單筆上限100點，每週上限100點；將來銀行至9/27）→ 合計8.5%',
+      '單筆滿NT$1萬再+5%（單筆上限850點）→ 最高13.5%',
+      '免1.5%海外手續費'
     ],
-    how: 'App需切換地區到「韓國」（我的→設定→地區設定→韓國）→ 出示QR Code給店家掃描，或掃店家QR Code。',
-    stores: '認明《ZeroPay／HIVEX》標誌，含CU、7-11、E-MART24、GS25、MEGA咖啡、Shake Shack、大創、Artbox、望遠市場、松島海上纜車、MOM\'S TOUCH、ABC-Mart、現代百貨（部分分店）等。不是每間分店都適用，百貨公司內的大創/MOM\'S TOUCH可能無法使用。',
-    code: '註冊推薦碼 51I3D234，可拿50點（~12/31）',
-    note: '僅能用「全支付帳戶」或「綁定銀行帳戶」付款；2026/5/25起，境外交易信用卡付款僅支援「國泰世華銀行信用卡」。官網標示的回饋%常把「免1.5%手續費」也算入，實際到手回饋會略低於標示數字。',
-    myFit: { status:'good', text:'妳的國泰帳戶、將來銀行帳戶都符合「綁定加碼5%」資格，建議綁其中一個進去疊加；信用卡部分則綁國泰CUBE卡（唯一支援的信用卡別）。' }
+    steps: [
+      '出國前：全支付App（PXPay內）綁好妳的「國泰世華帳戶」或「將來銀行帳戶」（這兩家妳都有，才吃得到+5%）；信用卡若要綁，這季境外只支援國泰CUBE卡',
+      '結帳時：開全支付→「我的→設定→地區設定」切到「韓國」→認明《ZeroPay／HIVEX》標誌→出示付款碼或掃店家碼',
+      '回饋領取：全點即時入帳，可在全支付「錢包→點數紀錄」查；1點=1元回台灣全聯、星巴克等可折抵'
+    ],
+    stores: '認明《ZeroPay／HIVEX》標誌，含CU、7-11、E-MART24、GS25、MEGA咖啡、Shake Shack、大創、Artbox、望遠市場、MOM\'S TOUCH、ABC-Mart、現代百貨（部分分店）等。百貨內的大創/MOM\'S TOUCH可能不適用。',
+    note: '僅能用全支付帳戶或綁定銀行帳戶付款；信用卡境外這季只支援國泰世華。這季銀行加碼只剩國泰世華一家（妳有帳戶，OK）。'
   },
   own: {
-    period: '依各銀行公告活動期間為準',
+    period: '依富邦官網公告期間為準',
+    myMax: '妳能拿：指定通路最高 10%',
     breakdown: [
-      '富邦好市多卡（Mastercard）：登入啟用Mastercard海外消費回饋官網後，於韓國星巴克新羅免稅店、漢江遊覽船等指定通路消費最高10%回饋',
-      '需每季重新登入啟用優惠'
+      '富邦好市多卡（Mastercard）於韓國星巴克新羅免稅店、漢江遊覽船等指定通路最高10%回饋',
+      '需先上官網登入啟用，且每季要重新啟用一次'
     ],
-    how: '前往台北富邦銀行Mastercard海外消費回饋官網登入啟用優惠，再持卡於指定通路消費。',
-    stores: '日本東京迪士尼／7-ELEVEN／Suica、韓國星巴克新羅免稅店／漢江遊覽船等指定通路。',
-    note: '此為信用卡本身活動，非電子支付，直接刷卡即可，不需綁定TWQR或其他支付App。'
+    steps: [
+      '出國前：到「台北富邦銀行 Mastercard 海外消費回饋」官網登入啟用優惠（每季都要重做一次，不啟用就沒有）',
+      '結帳時：於指定通路直接刷富邦好市多卡實體卡即可，不需綁任何支付App',
+      '回饋領取：依富邦活動辦法回饋至帳單／刷卡金'
+    ],
+    stores: '韓國星巴克新羅免稅店、漢江遊覽船等指定通路（清單以富邦官網為準）。',
+    note: '這是信用卡本身活動，非電子支付，直接刷卡。記得「每季重新啟用」是最容易忘、也最容易白白少拿的一步。'
   }
 };
 
@@ -548,12 +563,13 @@ render();
 cardRefEl.innerHTML = CARDS.map(c=>`
   <details class="card-ref">
     <summary>
-      <span>${c.name}${c.free ? '<span class="badge-free">免登錄</span>' : ''}</span>
+      <span>${c.name}${c.todo ? '<span class="badge-todo">要動作</span>' : (c.free ? '<span class="badge-free">免登錄</span>' : '')}</span>
       <span class="arrow">▸</span>
     </summary>
     <div class="body">
       <div class="rate-highlight mono" style="margin-bottom:6px;font-size:15px;">${c.rate}</div>
       ${c.detail}
+      ${c.todo ? `<div class="card-todo">⚑ ${c.todo}</div>` : ''}
     </div>
   </details>
 `).join('');
@@ -573,26 +589,23 @@ function openDetail(payKey){
       <button class="sheet-close" onclick="closeDetail()">✕</button>
     </div>
     <div class="sheet-period">${d.period}</div>
-    ${d.myFit ? `<div class="sheet-myfit ${d.myFit.status}"><b>${d.myFit.status==='good' ? '✓ 妳的帳戶適用' : '⚠ 妳的帳戶不適用'}</b>${d.myFit.text}</div>` : ''}
+    ${d.myMax ? `<div class="sheet-myfit good"><b>✓ 依妳的卡／帳戶</b>${d.myMax}</div>` : ''}
 
     <div class="sheet-section">
-      <h3>回饋內容</h3>
+      <h3>回饋內容（妳實際能拿）</h3>
       <ul>${d.breakdown.map(b=>`<li>${b}</li>`).join('')}</ul>
     </div>
 
-    <div class="sheet-section">
-      <h3>怎麼用</h3>
-      <p>${d.how}</p>
-    </div>
+    ${d.steps ? `<div class="sheet-section">
+      <h3>怎麼參加、怎麼領</h3>
+      <ol class="sheet-steps">${d.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    </div>` : ''}
 
     <div class="sheet-section">
       <h3>適用店家</h3>
       <p>${d.stores}</p>
     </div>
   `;
-  if(d.code){
-    html += `<div class="sheet-section"><span class="sheet-code">${d.code}</span></div>`;
-  }
   if(d.note){
     html += `<div class="sheet-note">ⓘ ${d.note}</div>`;
   }
